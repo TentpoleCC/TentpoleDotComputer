@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tentpole</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+      }
+
+      h1 {
+        margin-bottom: 0;
+      }
+
+      main {
+        padding-top: 50px;
+        text-align: center;
+      }
+
+      section {
+        margin-top: 50px;
+      }
+
+      section p {
+        margin: 0;
+        text-decoration: none;
+      }
+
+      a {
+        color: #000;
+        text-decoration: none;
+      }
+
+      a span {
+        text-decoration: underline;
+      }
+
+      a:hover::after {
+        content: " •";
+      }
+
+      a:hover::before {
+        content: "• ";
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Tentpole</h1>
+      <span>Computer Collective</span>
+      <section>
+        <p>
+          <a href="https://todepond.com"><span>Lu Wilson</span></a>
+        </p>
+        <p>
+          <a href="https://orionreed.com"><span>Orion Reed</span></a>
+        </p>
+        <p>
+          <a href="https://elliot.website/"><span>Elliot Evans</span></a>
+        </p>
+        <p>
+          <a href="https://merveilles.town/@unkai">
+            <span>Philippa Markovics</span>
+          </a>
+        </p>
+      </section>
+    </main>
+  </body>
+  <script>
+    const memberSection = document.querySelector("section");
+    const memberElements = memberSection.querySelectorAll("section p");
+
+    const shuffledMemberElements = shuffle(Array.from(memberElements));
+
+    memberSection.innerHTML = "";
+    shuffledMemberElements.forEach((element) => {
+      memberSection.appendChild(element);
+    });
+
+    function shuffle(array) {
+      const shuffledArray = [];
+      while (array.length > 0) {
+        const randomIndex = Math.floor(Math.random() * array.length);
+        shuffledArray.push(array[randomIndex]);
+        array.splice(randomIndex, 1);
+      }
+      return shuffledArray;
+    }
+  </script>
+</html>
