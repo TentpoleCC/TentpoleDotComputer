@@ -52,31 +52,34 @@
     const height = 500;
     const bottom = height - 100;
     const tentHeight = 130;
-    const entryXOffset = 50;
-    const entryYOffset = 30;
-    const lineOffset = 5;
+    const lineOffset = 3;
+    const bflCoords = { x: centerX - 100, y: bottom };
+    const bfrCoords = { x: centerX + 100, y: bottom };
+    const entryOffset = { x: 50, y: 30 };
+
+    let tCoords = { x: centerX, y: bottom - tentHeight };
 
     let nodes = [
-      { id: "bfl", fx: centerX - 100, fy: bottom},
-      { id: "bfr", fx: centerX + 100, fy: bottom},
-      { id: "bbl", fx: centerX - 25, fy: bottom - 45},
-      { id: "bbr", fx: centerX + 25, fy: bottom - 45},
-      { id: "t", fx: centerX, fy: bottom - tentHeight}
+      { id: "bfl", fx: bflCoords.x, fy: bfrCoords.y },
+      { id: "bfr", fx: bfrCoords.x, fy: bfrCoords.y },
+      { id: "bbl", fx: centerX - 25, fy: bottom - 45 },
+      { id: "bbr", fx: centerX + 25, fy: bottom - 45 },
+      { id: "t", fx: tCoords.x, fy: tCoords.y }
     ];
     let links = [
-      { source: "bfl", target: "bfr"},
-      { source: "bbl", target: "bbr"},
-      { source: "bfl", target: "bbl"},
-      { source: "bfr", target: "bbr"},
-      { source: "bfl", target: "t"},
-      { source: "bfr", target: "t"},
-      { source: "bbl", target: "t"},
-      { source: "bbr", target: "t"}
+      { source: "bfl", target: "bfr" },
+      { source: "bbl", target: "bbr" },
+      { source: "bfl", target: "bbl" },
+      { source: "bfr", target: "bbr" },
+      { source: "bfl", target: "t" },
+      { source: "bfr", target: "t" },
+      { source: "bbl", target: "t" },
+      { source: "bbr", target: "t" }
     ];
     let entryPoints = [
-      [centerX - 100 + entryXOffset, bottom],
-      [centerX, bottom - tentHeight + entryYOffset],
-      [centerX + 100 - entryXOffset, bottom]
+      [bflCoords.x + entryOffset.x, bflCoords.y],
+      [tCoords.x, tCoords.y + entryOffset.y],
+      [centerX + 100 - entryOffset.x, bottom]
     ];
 
     const entryCurve = d3.line().curve(d3.curveNatural);
@@ -123,41 +126,64 @@
       return x < lo ? lo : x > hi ? hi : x;
     }
 
+    let swaying = true;
+    let prevTime = performance.now();
+    let phase = 0;
+
     function sway(t) {
+      let dT = t - prevTime;
+      prevTime = t;
+      phase += dT * 0.0005;
       nodes = nodes.map(function(node) {
         if (node.id === "t") {
-          let sway = Math.sin(t * 0.0005);
-          node.fx = centerX - sway * 15;
-          node.fy = bottom - tentHeight - sway * 3;
-          entryPoints[1] = [centerX - sway * 15, bottom - tentHeight + entryYOffset - sway * 3];
+          let sway = Math.sin(phase);
+          node.fx = tCoords.x - sway * 15;
+          node.fy = tCoords.y - sway * 3;
+          entryPoints[1] = [node.fx, node.fy + entryOffset.y];
           entry.attr('d', entryCurve(entryPoints));
         }
         simulation.alpha(1).restart();
         return node;
       });
-      requestAnimationFrame(sway);
+      if (swaying) {
+        requestAnimationFrame(sway);
+      }
     }
-    sway(performance.now());
+    sway(prevTime);
 
-    function dragged(event, d) {
+    function onDragStart() {
+      swaying = false;
+    }
+    function onDrag(event, d) {
       d.fx = clamp(event.x, 0, width);
       d.fy = clamp(event.y, 0, height);
       if (d.id === "t") {
-        entryPoints[1] = [d.fx, d.fy + entryYOffset];
+        entryPoints[1] = [d.fx, d.fy + entryOffset.y];
       }
       if (d.id === "bfl") {
         entryPoints[0] = [
-          d.fx + entryXOffset, d.fy - lineOffset];
+          d.fx + entryOffset.x, d.fy - lineOffset];
       }
       if (d.id === "bfr") {
         entryPoints[2] = [
-          d.fx - entryXOffset, d.fy - lineOffset];
+          d.fx - entryOffset.x, d.fy - lineOffset];
       }
       entry.attr('d', entryCurve(entryPoints));
-      simulation.alpha(1).restart();
+    }
+    function onDragEnd(event, d) {
+      if (d.id === "t") {
+        tCoords = { x: d.fx, y: d.fy};
+      }
+      phase = 0;
+      prevTime = performance.now();
+      swaying = true;
+      sway(prevTime);
     }
 
-    const drag = d3.drag().on("drag", dragged);
+    const drag = d3.drag()
+      .on("start", onDragStart)
+      .on("drag", onDrag)
+      .on("end", onDragEnd);
     node.call(drag);
     ground.append(svg.node());
   </script>
