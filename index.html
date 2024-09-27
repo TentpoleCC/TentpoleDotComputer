@@ -47,6 +47,7 @@
 
       section {
         margin-top: 50px;
+        padding-bottom: 30px;
       }
 
       section p {
@@ -133,6 +134,19 @@
             <span>Philippa Markovics</span>
           </a>
         </p>
+      </section>
+      <section>
+        <form
+          action="https://buttondown.com/api/emails/embed-subscribe/tentpole"
+          method="post"
+          target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/tentpole', 'popupwindow')"
+          class="embeddable-buttondown-form"
+        >
+          <input type="email" name="email" id="bd-email" />
+
+          <input type="submit" value="Subscribe" />
+        </form>
       </section>
     </main>
   </body>
