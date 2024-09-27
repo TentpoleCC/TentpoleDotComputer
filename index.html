@@ -27,7 +27,12 @@
         --blue: #4cc6ff;
         --pink: #ff5adb;
         --orange: #ffca76;
-        --green: #5eff9c;
+        --base-green: #5eff9c;
+        --green: #55ee90;
+      }
+
+      body {
+        --primary: var(--blue);
       }
 
       * {
@@ -101,6 +106,16 @@
         width: 100%;
       }
 
+      *:focus {
+        outline: 2.5px solid var(--primary);
+        outline-offset: -0px;
+      }
+
+      a:focus {
+        outline-offset: 3px;
+        border-radius: 5px;
+      }
+
       input[type="email"]::placeholder {
         color: #000;
         font-weight: light;
@@ -119,14 +134,15 @@
       }
 
       input[type="submit"]:hover {
-        background-color: #444;
+        background-color: var(--primary);
+        color: black;
       }
 
       form {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 2px;
+        gap: 4px;
         max-width: 100%;
         width: 300px;
       }
@@ -228,10 +244,18 @@
     const flourishLogos = document.querySelectorAll(".flourish-logo");
     const plainLogo = document.getElementById("plain-logo");
 
-    const selectedFlourishLogo =
-      flourishLogos[Math.floor(Math.random() * flourishLogos.length)];
+    const selectedFlourishIndex = Math.floor(
+      Math.random() * flourishLogos.length
+    );
+
+    const selectedFlourishLogo = flourishLogos[selectedFlourishIndex];
 
     plainLogo.style.display = "none";
     selectedFlourishLogo.style.display = "inline";
+
+    const colourMap = ["green", "orange", "pink", "blue"];
+    const primaryColour = colourMap[selectedFlourishIndex];
+
+    document.body.style.setProperty("--primary", `var(--${primaryColour})`);
   </script>
 </html>
