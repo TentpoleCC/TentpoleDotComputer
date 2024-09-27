@@ -23,6 +23,18 @@
     />
     <title>Tentpole</title>
     <style>
+      :root {
+        --blue: #4cc6ff;
+        --pink: #ff5adb;
+        --orange: #ffca76;
+        --base-green: #5eff9c;
+        --green: #55ee90;
+      }
+
+      body {
+        --primary: var(--blue);
+      }
+
       * {
         box-sizing: border-box;
       }
@@ -40,13 +52,17 @@
         margin-bottom: 0;
       }
 
-      main {
+      main,
+      section {
         padding-top: 50px;
         text-align: center;
       }
 
       section {
-        margin-top: 50px;
+        padding-bottom: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       section p {
@@ -57,6 +73,7 @@
       a {
         color: #000;
         text-decoration: none;
+        white-space: nowrap;
       }
 
       a span {
@@ -78,6 +95,56 @@
 
       .flourish-logo {
         display: none;
+      }
+
+      input[type="email"] {
+        font-size: 14px;
+        height: 28px;
+        border: 1.5px solid #000;
+        border-radius: 4px 0px 0px 4px;
+        padding: 0px 4px;
+        width: 100%;
+      }
+
+      *:focus {
+        outline: 2.5px solid var(--primary);
+        outline-offset: -0px;
+      }
+
+      a:focus {
+        outline-offset: 3px;
+        border-radius: 5px;
+      }
+
+      input[type="email"]::placeholder {
+        color: #000;
+        font-weight: light;
+      }
+
+      input[type="submit"] {
+        background-color: #000;
+        color: #fff;
+        border: none;
+        padding: 0px 12px;
+        height: 28px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 0px 4px 4px 0px;
+        width: fit-content;
+      }
+
+      input[type="submit"]:hover {
+        background-color: var(--primary);
+        color: black;
+      }
+
+      form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        max-width: 100%;
+        width: 300px;
       }
     </style>
   </head>
@@ -134,6 +201,23 @@
           </a>
         </p>
       </section>
+      <section>
+        <form
+          action="https://buttondown.com/api/emails/embed-subscribe/tentpole"
+          method="post"
+          target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/tentpole', 'popupwindow')"
+          class="embeddable-buttondown-form"
+        >
+          <input
+            type="email"
+            name="email"
+            id="bd-email"
+            placeholder="Email updates?"
+          />
+          <input type="submit" value="Subscribe" />
+        </form>
+      </section>
     </main>
   </body>
   <script>
@@ -160,10 +244,18 @@
     const flourishLogos = document.querySelectorAll(".flourish-logo");
     const plainLogo = document.getElementById("plain-logo");
 
-    const selectedFlourishLogo =
-      flourishLogos[Math.floor(Math.random() * flourishLogos.length)];
+    const selectedFlourishIndex = Math.floor(
+      Math.random() * flourishLogos.length
+    );
+
+    const selectedFlourishLogo = flourishLogos[selectedFlourishIndex];
 
     plainLogo.style.display = "none";
     selectedFlourishLogo.style.display = "inline";
+
+    const colourMap = ["green", "orange", "pink", "blue"];
+    const primaryColour = colourMap[selectedFlourishIndex];
+
+    document.body.style.setProperty("--primary", `var(--${primaryColour})`);
   </script>
 </html>
