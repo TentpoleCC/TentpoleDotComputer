@@ -47,14 +47,17 @@
         margin-bottom: 0;
       }
 
-      main {
+      main,
+      section {
         padding-top: 50px;
         text-align: center;
       }
 
       section {
-        margin-top: 50px;
         padding-bottom: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       section p {
@@ -90,12 +93,12 @@
       }
 
       input[type="email"] {
-        width: 200px;
-        max-width: 100%;
         font-size: 14px;
-        /* line-height: 1.6; */
         height: 28px;
         border: 1.5px solid #000;
+        border-radius: 4px 0px 0px 4px;
+        padding: 0px 4px;
+        width: 100%;
       }
 
       input[type="email"]::placeholder {
@@ -111,18 +114,21 @@
         height: 28px;
         font-size: 14px;
         cursor: pointer;
+        border-radius: 0px 4px 4px 0px;
+        width: fit-content;
       }
 
       input[type="submit"]:hover {
         background-color: #444;
       }
 
-      hgroup {
+      form {
         display: flex;
-        flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        gap: 4px;
+        gap: 2px;
+        max-width: 100%;
+        width: 300px;
       }
     </style>
   </head>
@@ -187,15 +193,13 @@
           onsubmit="window.open('https://buttondown.com/tentpole', 'popupwindow')"
           class="embeddable-buttondown-form"
         >
-          <hgroup>
-            <input
-              type="email"
-              name="email"
-              id="bd-email"
-              placeholder="Email updates?"
-            />
-            <input type="submit" value="Subscribe" />
-          </hgroup>
+          <input
+            type="email"
+            name="email"
+            id="bd-email"
+            placeholder="Email updates?"
+          />
+          <input type="submit" value="Subscribe" />
         </form>
       </section>
     </main>
