@@ -32,6 +32,13 @@
         stroke: white;
         stroke-width: 2px;
       }
+      .node:hover {
+        fill: orange;
+        cursor: grab;
+      }
+      .node:active {
+        cursor: grabbing;
+      }
       .entry {
         stroke: black;
         stroke-width: 2;
@@ -172,7 +179,7 @@
     }
     function onDragEnd(event, d) {
       if (d.id === "t") {
-        tCoords = { x: d.fx, y: d.fy};
+        tCoords = { x: d.fx, y: d.fy };
       }
       phase = 0;
       prevTime = performance.now();
