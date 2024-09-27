@@ -9,6 +9,10 @@
         box-sizing: border-box;
       }
 
+      html {
+        height: 100%;
+      }
+
       body {
         font-family: Arial, sans-serif;
         line-height: 1.6;
@@ -48,12 +52,23 @@
       a:hover::before {
         content: "• ";
       }
+
+      img {
+        max-width: 100%;
+      }
+
+      .flourish-logo {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <main>
-      <h1>Tentpole</h1>
-      <span>Computer Collective</span>
+      <img id="plain-logo" src="/assets/flourish-0.png" width="400" />
+      <img class="flourish-logo" src="/assets/flourish-1.png" width="400" />
+      <img class="flourish-logo" src="/assets/flourish-2.png" width="400" />
+      <img class="flourish-logo" src="/assets/flourish-3.png" width="400" />
+      <img class="flourish-logo" src="/assets/flourish-4.png" width="400" />
       <section>
         <p>
           <a href="https://todepond.com"><span>Lu Wilson</span></a>
@@ -92,5 +107,14 @@
       }
       return shuffledArray;
     }
+
+    const flourishLogos = document.querySelectorAll(".flourish-logo");
+    const plainLogo = document.getElementById("plain-logo");
+
+    const selectedFlourishLogo =
+      flourishLogos[Math.floor(Math.random() * flourishLogos.length)];
+
+    plainLogo.style.display = "none";
+    selectedFlourishLogo.style.display = "inline";
   </script>
 </html>
