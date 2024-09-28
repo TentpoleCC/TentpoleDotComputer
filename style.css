@@ -56,11 +56,11 @@ a span {
 }
 
 a:hover::after {
-  content: " ⏺";
+  content: " •";
 }
 
 a:hover::before {
-  content: "⏺ ";
+  content: "• ";
 }
 
 img {
