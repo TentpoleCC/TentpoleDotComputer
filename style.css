@@ -16,6 +16,8 @@
 
   --foreground: black;
   --background: white;
+
+  --radius: 5px;
 }
 
 .dark {
@@ -120,8 +122,8 @@ input[type="email"] {
   font-size: 16px;
   height: 28px;
   border: 1.5px solid var(--foreground);
-  border-radius: 4px 0px 0px 4px;
-  padding: 0px 4px;
+  border-radius: var(--radius) 0px 0px var(--radius);
+  padding: 0px var(--radius);
   width: 100%;
   background-color: var(--background);
 }
@@ -133,7 +135,7 @@ input[type="email"] {
 
 a:focus {
   outline-offset: 3px;
-  border-radius: 5px;
+  border-radius: var(--radius);
 }
 
 input[type="email"]::placeholder {
@@ -149,7 +151,7 @@ input[type="submit"] {
   height: 28px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 0px 4px 4px 0px;
+  border-radius: 0px var(--radius) var(--radius) 0px;
   width: fit-content;
 }
 
