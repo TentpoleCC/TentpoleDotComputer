@@ -7,15 +7,15 @@
 
   --primary: var(--blue);
 
-  --black: black;
-  --white: white;
+  --foreground: black;
+  --background: white;
 }
 
 /* dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --black: white;
-    --white: black;
+    --foreground: white;
+    --background: black;
   }
 }
 
@@ -25,7 +25,7 @@
 
 html {
   height: 100%;
-  background-color: var(--white);
+  background-color: var(--background);
 }
 
 body {
@@ -56,7 +56,7 @@ section p {
 }
 
 a {
-  color: var(--black);
+  color: var(--foreground);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -85,11 +85,11 @@ img {
 input[type="email"] {
   font-size: 14px;
   height: 28px;
-  border: 1.5px solid var(--black);
+  border: 1.5px solid var(--foreground);
   border-radius: 4px 0px 0px 4px;
   padding: 0px 4px;
   width: 100%;
-  background-color: var(--white);
+  background-color: var(--background);
 }
 
 *:focus {
@@ -103,13 +103,13 @@ a:focus {
 }
 
 input[type="email"]::placeholder {
-  color: var(--black);
+  color: var(--foreground);
   font-weight: light;
 }
 
 input[type="submit"] {
-  background-color: var(--black);
-  color: var(--white);
+  background-color: var(--foreground);
+  color: var(--background);
   border: none;
   padding: 0px 12px;
   height: 28px;
