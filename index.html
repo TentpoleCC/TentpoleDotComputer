@@ -148,29 +148,67 @@
       return shuffledArray;
     }
 
+    const flourishLogosLight = document.querySelectorAll(
+      ".flourish-logo.light"
+    );
+
+    const flourishLogosDark = document.querySelectorAll(".flourish-logo.dark");
+    const plainLogoLight = document.querySelector("#plain-logo.light");
+    const plainLogoDark = document.querySelector("#plain-logo.dark");
+
+    const selectedFlourishIndexLight = Math.floor(
+      Math.random() * flourishLogosLight.length
+    );
+    const selectedFlourishIndexDark = Math.floor(
+      Math.random() * flourishLogosDark.length
+    );
+
+    const selectedFlourishLogoLight =
+      flourishLogosLight[selectedFlourishIndexLight];
+    const selectedFlourishLogoDark =
+      flourishLogosDark[selectedFlourishIndexDark];
+
+    plainLogoLight.style.display = "none";
+    plainLogoDark.style.display = "none";
+    selectedFlourishLogoLight.classList.add("selected");
+    selectedFlourishLogoDark.classList.add("selected");
+
+    const colourMapLight = ["green", "red", "pink", "blue"];
+    const primaryColourLight = colourMapLight[selectedFlourishIndexLight];
+    const colourMapDark = ["green", "red", "pink"];
+    const primaryColourDark = colourMapDark[selectedFlourishIndexDark];
+
+    document.body.style.setProperty(
+      "--primary-light",
+      `var(--${primaryColourLight})`
+    );
+    document.body.style.setProperty(
+      "--primary-dark",
+      `var(--${primaryColourDark})`
+    );
+
     const isDarkMode = window.matchMedia(
       "(prefers-color-scheme: dark)"
     ).matches;
-
-    const flourishLogos = document.querySelectorAll(
-      ".flourish-logo" + (isDarkMode ? ".dark" : ".light")
-    );
-    const plainLogo = document.querySelector(
-      "#plain-logo." + (isDarkMode ? "dark" : "light")
-    );
-
-    const selectedFlourishIndex = Math.floor(
-      Math.random() * flourishLogos.length
+    document.body.style.setProperty(
+      "--primary",
+      // todo: shouldnt do this because when the user changes scheme, it wont update
+      isDarkMode
+        ? `var(--${primaryColourDark})`
+        : `var(--${primaryColourLight})`
     );
 
-    const selectedFlourishLogo = flourishLogos[selectedFlourishIndex];
-
-    plainLogo.style.display = "none";
-    selectedFlourishLogo.style.display = "inline";
-
-    const colourMap = ["green", "red", "pink", "blue"];
-    const primaryColour = colourMap[selectedFlourishIndex];
-
-    document.body.style.setProperty("--primary", `var(--${primaryColour})`);
+    // todo: should do this in CSS land instead
+    // will fix up when colour theme is slightly more stable
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        document.body.style.setProperty(
+          "--primary",
+          e.matches
+            ? `var(--${primaryColourDark})`
+            : `var(--${primaryColourLight})`
+        );
+      });
   </script>
 </html>
