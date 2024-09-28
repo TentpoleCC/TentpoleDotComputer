@@ -28,38 +28,68 @@
     <main>
       <img
         id="plain-logo"
+        class="light"
         src="/assets/flourish-0.png"
         width="400"
         height="350"
         alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, black font."
       />
       <img
-        class="flourish-logo"
+        class="flourish-logo light"
         src="/assets/flourish-1.png"
         width="400"
         height="350"
         alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, black font. A green paint brush stroke is scribbled on top of it all."
       />
       <img
-        class="flourish-logo"
+        class="flourish-logo light"
         src="/assets/flourish-2.png"
         width="400"
         height="350"
-        alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, black font. A pale orangey brown brush stroke is painted over the text."
+        alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, black font. A reddy brown brush stroke is painted over the text."
       />
       <img
-        class="flourish-logo"
+        class="flourish-logo light"
         src="/assets/flourish-3.png"
         width="400"
         height="350"
         alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, black font. A pink paint brush stroke is marked over the roof of the tent."
       />
       <img
-        class="flourish-logo"
+        class="flourish-logo light"
         src="/assets/flourish-4.png"
         width="400"
         height="350"
         alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, black font. A blue paint brush stroke is scribbled on top of it all."
+      />
+      <img
+        id="plain-logo"
+        class="dark"
+        src="/assets/flourish-dark-0.png"
+        width="400"
+        height="350"
+        alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, white font."
+      />
+      <img
+        class="flourish-logo dark"
+        src="/assets/flourish-dark-1.png"
+        width="400"
+        height="350"
+        alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, white font. A green paint brush stroke is scribbled on top of it all."
+      />
+      <img
+        class="flourish-logo dark"
+        src="/assets/flourish-dark-2.png"
+        width="400"
+        height="350"
+        alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, white font. A reddy brown brush stroke is painted over the text."
+      />
+      <img
+        class="flourish-logo dark"
+        src="/assets/flourish-dark-3.png"
+        width="400"
+        height="350"
+        alt="A tent drawn with diagrammatic lines and dots. It say 'Tentpole' underneath in a bold, white font. A pink paint brush stroke is marked over the roof of the tent."
       />
       <section>
         <p>
@@ -118,21 +148,67 @@
       return shuffledArray;
     }
 
-    const flourishLogos = document.querySelectorAll(".flourish-logo");
-    const plainLogo = document.getElementById("plain-logo");
-
-    const selectedFlourishIndex = Math.floor(
-      Math.random() * flourishLogos.length
+    const flourishLogosLight = document.querySelectorAll(
+      ".flourish-logo.light"
     );
 
-    const selectedFlourishLogo = flourishLogos[selectedFlourishIndex];
+    const flourishLogosDark = document.querySelectorAll(".flourish-logo.dark");
+    const plainLogoLight = document.querySelector("#plain-logo.light");
+    const plainLogoDark = document.querySelector("#plain-logo.dark");
 
-    plainLogo.style.display = "none";
-    selectedFlourishLogo.style.display = "inline";
+    const selectedFlourishIndexLight = Math.floor(
+      Math.random() * flourishLogosLight.length
+    );
+    const selectedFlourishIndexDark = Math.floor(
+      Math.random() * flourishLogosDark.length
+    );
 
-    const colourMap = ["green", "orange", "pink", "blue"];
-    const primaryColour = colourMap[selectedFlourishIndex];
+    const selectedFlourishLogoLight =
+      flourishLogosLight[selectedFlourishIndexLight];
+    const selectedFlourishLogoDark =
+      flourishLogosDark[selectedFlourishIndexDark];
 
-    document.body.style.setProperty("--primary", `var(--${primaryColour})`);
+    plainLogoLight.style.display = "none";
+    plainLogoDark.style.display = "none";
+    selectedFlourishLogoLight.classList.add("selected");
+    selectedFlourishLogoDark.classList.add("selected");
+
+    const colourMapLight = ["green", "red", "pink", "blue"];
+    const primaryColourLight = colourMapLight[selectedFlourishIndexLight];
+    const colourMapDark = ["green", "red", "pink"];
+    const primaryColourDark = colourMapDark[selectedFlourishIndexDark];
+
+    document.body.style.setProperty(
+      "--primary-light",
+      `var(--${primaryColourLight})`
+    );
+    document.body.style.setProperty(
+      "--primary-dark",
+      `var(--${primaryColourDark})`
+    );
+
+    const isDarkMode = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    document.body.style.setProperty(
+      "--primary",
+      // todo: shouldnt do this because when the user changes scheme, it wont update
+      isDarkMode
+        ? `var(--${primaryColourDark})`
+        : `var(--${primaryColourLight})`
+    );
+
+    // todo: should do this in CSS land instead
+    // will fix up when colour theme is slightly more stable
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        document.body.style.setProperty(
+          "--primary",
+          e.matches
+            ? `var(--${primaryColourDark})`
+            : `var(--${primaryColourLight})`
+        );
+      });
   </script>
 </html>
