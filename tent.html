@@ -10,6 +10,7 @@
       }
       body {
         font-family: Arial, sans-serif;
+        background: black;
       }
       #ground {
         position: relative;
@@ -23,24 +24,24 @@
         pointer-events: none;
       }
       .link {
-        stroke: black;
+        stroke: white;
         stroke-width: 2.5px;
       }
       .node {
         cursor: move;
-        fill: black;
-        stroke: white;
+        fill: white;
+        stroke: black;
         stroke-width: 2px;
       }
       .node:hover {
-        fill: orange;
+        fill: #72dec2;
         cursor: grab;
       }
       .node:active {
         cursor: grabbing;
       }
       .entry {
-        stroke: black;
+        stroke: white;
         stroke-width: 2;
         stroke-dasharray: 6 6;
       }
@@ -59,20 +60,26 @@
     const height = 500;
     const bottom = height - 100;
     const tentHeight = 130;
-    const lineOffset = 3;
-    const bflCoords = { x: centerX - 100, y: bottom };
-    const bfrCoords = { x: centerX + 100, y: bottom };
-    const entryOffset = { x: 50, y: 30 };
+    const lineOffset = 5;
 
-    let tCoords = { x: centerX, y: bottom - tentHeight };
+    let entryOffset = { x: 50, y: 30 };
+
+    let coords = {
+      t: { x: centerX, y: bottom - tentHeight },
+      bfl: { x: centerX - 100, y: bottom },
+      bfr: { x: centerX + 100, y: bottom },
+      bbl: { x: centerX - 25, y: bottom - 45 },
+      bbr: { x: centerX + 25, y: bottom - 45 }
+    }
 
     let nodes = [
-      { id: "bfl", fx: bflCoords.x, fy: bfrCoords.y },
-      { id: "bfr", fx: bfrCoords.x, fy: bfrCoords.y },
-      { id: "bbl", fx: centerX - 25, fy: bottom - 45 },
-      { id: "bbr", fx: centerX + 25, fy: bottom - 45 },
-      { id: "t", fx: tCoords.x, fy: tCoords.y }
+      { id: "bfl", fx: coords.bfl.x, fy: coords.bfl.y },
+      { id: "bfr", fx: coords.bfr.x, fy: coords.bfr.y },
+      { id: "bbl", fx: coords.bbl.x, fy: coords.bbl.y },
+      { id: "bbr", fx: coords.bbr.x, fy: coords.bbr.y },
+      { id: "t", fx: coords.t.x, fy: coords.t.y }
     ];
+
     let links = [
       { source: "bfl", target: "bfr" },
       { source: "bbl", target: "bbr" },
@@ -83,11 +90,18 @@
       { source: "bbl", target: "t" },
       { source: "bbr", target: "t" }
     ];
-    let entryPoints = [
-      [bflCoords.x + entryOffset.x, bflCoords.y],
-      [tCoords.x, tCoords.y + entryOffset.y],
-      [centerX + 100 - entryOffset.x, bottom]
-    ];
+
+    coords.et = { x: coords.t.x, y: coords.t.y + entryOffset.y };
+    coords.el = { x: coords.bfl.x + entryOffset.x, y: coords.bfl.y };
+    coords.er = { x: coords.bfr.x - entryOffset.x, y: coords.bfr.y };
+
+    function makeCurve() {
+      return [
+        [coords.el.x, coords.el.y],
+        [coords.et.x, coords.et.y],
+        [coords.er.x, coords.er.y],
+      ];
+    }
 
     const entryCurve = d3.line().curve(d3.curveNatural);
     const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
@@ -106,7 +120,7 @@
       .classed("node", true);
 
     const entry = svg.append('path')
-      .attr('d', entryCurve(entryPoints))
+      .attr('d', entryCurve(makeCurve()))
       .attr('fill', 'none')
       .classed("entry", true);
 
@@ -136,51 +150,62 @@
     let swaying = true;
     let prevTime = performance.now();
     let phase = 0;
+    let tfs = coords;
 
     function sway(t) {
+      if (!swaying) return;
       let dT = t - prevTime;
       prevTime = t;
-      phase += dT * 0.0005;
-      nodes = nodes.map(function(node) {
-        if (node.id === "t") {
-          let sway = Math.sin(phase);
-          node.fx = tCoords.x - sway * 15;
-          node.fy = tCoords.y - sway * 3;
-          entryPoints[1] = [node.fx, node.fy + entryOffset.y];
-          entry.attr('d', entryCurve(entryPoints));
-        }
-        simulation.alpha(1).restart();
-        return node;
-      });
-      if (swaying) {
-        requestAnimationFrame(sway);
+      phase += dT * 0.0009;
+      let offset = Math.sin(phase);
+      tfs = {
+        t: { x: coords.t.x - offset * 15, y: coords.t.y - offset * 10 },
+        bfl: { x: coords.bfl.x - offset * 20, y: coords.bfl.y - offset * 3 },
+        bfr: { x: coords.bfr.x - offset * 20, y: coords.bfr.y + offset * 3 },
+        bbl: { x: coords.bbl.x - offset * 10, y: coords.bbl.y - offset * 2 },
+        bbr: { x: coords.bbr.x - offset * 20, y: coords.bbr.y + offset * 2 }
       }
+      nodes = nodes.map(function(node) {
+        node.fx = tfs[node.id].x;
+        node.fy = tfs[node.id].y;
+
+        if (node.id === "bfl") {
+          coords.el = { x: node.fx + entryOffset.x, y: node.fy };
+        }
+        if (node.id === "t") {
+          coords.et = { x: node.fx, y: node.fy + entryOffset.y };
+        }
+        if (node.id === "bfr") {
+          coords.er = { x: node.fx - entryOffset.x, y: node.fy };
+        }
+        entry.attr('d', entryCurve(makeCurve()))
+        return node;
+      })
+      simulation.alpha(1).restart();
+      requestAnimationFrame(sway);
     }
     sway(prevTime);
 
-    function onDragStart() {
+    function onDragStart(event, d) {
       swaying = false;
     }
     function onDrag(event, d) {
       d.fx = clamp(event.x, 0, width);
       d.fy = clamp(event.y, 0, height);
       if (d.id === "t") {
-        entryPoints[1] = [d.fx, d.fy + entryOffset.y];
+        coords.et = { x: d.fx, y: d.fy + entryOffset.y };
       }
       if (d.id === "bfl") {
-        entryPoints[0] = [
-          d.fx + entryOffset.x, d.fy - lineOffset];
+        coords.el = { x: d.fx + entryOffset.x, y: d.fy - lineOffset };
       }
       if (d.id === "bfr") {
-        entryPoints[2] = [
-          d.fx - entryOffset.x, d.fy - lineOffset];
+        coords.er = { x: d.fx - entryOffset.x, y: d.fy - lineOffset };
       }
-      entry.attr('d', entryCurve(entryPoints));
+      entry.attr('d', entryCurve(makeCurve()));
     }
     function onDragEnd(event, d) {
-      if (d.id === "t") {
-        tCoords = { x: d.fx, y: d.fy };
-      }
+      coords = Object.assign({}, coords, tfs);
+      coords[d.id] = { x: d.fx, y: d.fy };
       phase = 0;
       prevTime = performance.now();
       swaying = true;
