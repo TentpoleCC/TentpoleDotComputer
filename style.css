@@ -117,7 +117,7 @@ img {
 }
 
 input[type="email"] {
-  font-size: 14px;
+  font-size: 16px;
   height: 28px;
   border: 1.5px solid var(--foreground);
   border-radius: 4px 0px 0px 4px;
@@ -147,13 +147,13 @@ input[type="submit"] {
   border: none;
   padding: 0px 12px;
   height: 28px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   border-radius: 0px 4px 4px 0px;
   width: fit-content;
 }
 
-input[type="submit"]:submit {
+input[type="submit"]:hover {
   background-color: var(--primary);
   color: black;
 }
