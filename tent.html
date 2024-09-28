@@ -151,13 +151,14 @@
     let prevTime = performance.now();
     let phase = 0;
     let tfs = coords;
+    let direction = -1;
 
     function sway(t) {
       if (!swaying) return;
       let dT = t - prevTime;
       prevTime = t;
       phase += dT * 0.0009;
-      let offset = Math.sin(phase);
+      let offset = Math.sin(phase) * direction;
       tfs = {
         t: { x: coords.t.x - offset * 15, y: coords.t.y - offset * 10 },
         bfl: { x: coords.bfl.x - offset * 20, y: coords.bfl.y - offset * 3 },
@@ -206,6 +207,7 @@
     function onDragEnd(event, d) {
       coords = Object.assign({}, coords, tfs);
       coords[d.id] = { x: d.fx, y: d.fy };
+      direction = direction * -1;
       phase = 0;
       prevTime = performance.now();
       swaying = true;
