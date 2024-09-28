@@ -2,6 +2,7 @@
   --blue: #4cc6ff;
   --pink: #ff5adb;
   --orange: #ffca76;
+  --red: #ed6662;
   --base-green: #5eff9c;
   --green: #55ee90;
 
@@ -9,6 +10,14 @@
 
   --foreground: black;
   --background: white;
+
+  --green-dark: #35d673;
+  --pink-dark: #f24da2;
+  --red-dark: var(--red);
+}
+
+.dark {
+  display: none;
 }
 
 /* dark mode */
@@ -16,6 +25,16 @@
   :root {
     --foreground: white;
     --background: black;
+    --green: var(--green-dark);
+    --pink: var(--pink-dark);
+  }
+
+  .light {
+    display: none;
+  }
+
+  .dark {
+    display: inline-block;
   }
 }
 
