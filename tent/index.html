@@ -12,9 +12,12 @@
         font-family: Arial, sans-serif;
         background: black;
       }
+      html {
+        height: 100%;
+      }
       #ground {
         position: relative;
-        height: 500px;
+        height: 100%;
       }
       #entry {
         position: absolute;
@@ -54,11 +57,12 @@
   </body>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script type="module">
+    const dpr = window.devicePixelRatio;
     const ground = document.getElementById("ground");
     const width = window.innerWidth;
     const centerX = width / 2;
-    const height = 500;
-    const bottom = height - 100;
+    const height = window.innerHeight;
+    const bottom = 400;
     const tentHeight = 130;
     const lineOffset = 5;
 
@@ -69,15 +73,15 @@
       bfl: { x: centerX - 100, y: bottom },
       bfr: { x: centerX + 100, y: bottom },
       bbl: { x: centerX - 25, y: bottom - 45 },
-      bbr: { x: centerX + 25, y: bottom - 45 }
-    }
+      bbr: { x: centerX + 25, y: bottom - 45 },
+    };
 
     let nodes = [
       { id: "bfl", fx: coords.bfl.x, fy: coords.bfl.y },
       { id: "bfr", fx: coords.bfr.x, fy: coords.bfr.y },
       { id: "bbl", fx: coords.bbl.x, fy: coords.bbl.y },
       { id: "bbr", fx: coords.bbr.x, fy: coords.bbr.y },
-      { id: "t", fx: coords.t.x, fy: coords.t.y }
+      { id: "t", fx: coords.t.x, fy: coords.t.y },
     ];
 
     let links = [
@@ -88,7 +92,7 @@
       { source: "bfl", target: "t" },
       { source: "bfr", target: "t" },
       { source: "bbl", target: "t" },
-      { source: "bbr", target: "t" }
+      { source: "bbr", target: "t" },
     ];
 
     coords.et = { x: coords.t.x, y: coords.t.y + entryOffset.y };
@@ -119,20 +123,19 @@
       .attr("r", 6)
       .classed("node", true);
 
-    const entry = svg.append('path')
-      .attr('d', entryCurve(makeCurve()))
-      .attr('fill', 'none')
+    const entry = svg
+      .append("path")
+      .attr("d", entryCurve(makeCurve()))
+      .attr("fill", "none")
       .classed("entry", true);
 
     function tick(x) {
       link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-      node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
+        .attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
+      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
     }
 
     const simulation = d3
@@ -140,7 +143,10 @@
       .nodes(nodes)
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("link", d3.forceLink(links).id(d => d.id))
+      .force(
+        "link",
+        d3.forceLink(links).id((d) => d.id)
+      )
       .on("tick", tick);
 
     function clamp(x, lo, hi) {
@@ -164,9 +170,9 @@
         bfl: { x: coords.bfl.x - offset * 20, y: coords.bfl.y - offset * 3 },
         bfr: { x: coords.bfr.x - offset * 20, y: coords.bfr.y + offset * 3 },
         bbl: { x: coords.bbl.x - offset * 10, y: coords.bbl.y - offset * 2 },
-        bbr: { x: coords.bbr.x - offset * 20, y: coords.bbr.y + offset * 2 }
-      }
-      nodes = nodes.map(function(node) {
+        bbr: { x: coords.bbr.x - offset * 20, y: coords.bbr.y + offset * 2 },
+      };
+      nodes = nodes.map(function (node) {
         node.fx = tfs[node.id].x;
         node.fy = tfs[node.id].y;
 
@@ -179,9 +185,9 @@
         if (node.id === "bfr") {
           coords.er = { x: node.fx - entryOffset.x, y: node.fy };
         }
-        entry.attr('d', entryCurve(makeCurve()))
+        entry.attr("d", entryCurve(makeCurve()));
         return node;
-      })
+      });
       simulation.alpha(1).restart();
       requestAnimationFrame(sway);
     }
@@ -202,7 +208,7 @@
       if (d.id === "bfr") {
         coords.er = { x: d.fx - entryOffset.x, y: d.fy - lineOffset };
       }
-      entry.attr('d', entryCurve(makeCurve()));
+      entry.attr("d", entryCurve(makeCurve()));
     }
     function onDragEnd(event, d) {
       coords = Object.assign({}, coords, tfs);
@@ -214,7 +220,8 @@
       sway(prevTime);
     }
 
-    const drag = d3.drag()
+    const drag = d3
+      .drag()
       .on("start", onDragStart)
       .on("drag", onDrag)
       .on("end", onDragEnd);
