@@ -101,11 +101,11 @@ a span {
   text-decoration: underline;
 }
 
-a:hover::after {
+main a:hover::after {
   content: " •";
 }
 
-a:hover::before {
+main a:hover::before {
   content: "• ";
 }
 
@@ -167,4 +167,16 @@ form {
   gap: 4px;
   max-width: 100%;
   width: 300px;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
